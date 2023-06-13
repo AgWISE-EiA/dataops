@@ -33,8 +33,8 @@ AOI_point_SR_AgEra5 <- get_WindSpeed_pointData(country = "Rwanda",  useCaseName 
 #################################################################################################################
 
 AOI_WS_summary_p1 <- get_WindSpeed_pointSummarydata(country = "Rwanda",  useCaseName = "RAB", Crop = "Potato", 
-                                                 AOI = TRUE, overwrite = TRUE, Planting_month_date = "02-05", 
-                                                 Harvest_month_date = "06-05", jobs=10, dataSource = "AgEra", ID = NULL)
+                                                 AOI = TRUE, overwrite = TRUE, Planting_month_date = "08-08", 
+                                                 Harvest_month_date = "12-08", jobs=10, dataSource = "AgEra", ID = NULL)
 
 
 #################################################################################################################

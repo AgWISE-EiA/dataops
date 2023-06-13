@@ -20,9 +20,9 @@ invisible(lapply(packages_required, library, character.only = TRUE))
 # Extract geo spatial data time series for point based data prepared for Crop Models
 #' @description this functions loops through all .nc files (~30 - 40 years) for rainfall to provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'                            paste("~/agwise/AgWise_Data/data_sourcing/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
 #'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #'  
 #' @param country country name
 #' @param useCaseName use case name  name
@@ -48,13 +48,13 @@ get_data_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, overwr
                                Planting_month_date = "02-01", Harvest_month_date = "05-30", 
                                jobs = 10, dataSource, ID, varName = NULL){
   
-  # 4.1. Initialization of input and output data ####
+  # 4.1. Initialization of input and output data #### g
   
   # Input rainfall
   if(dataSource == "CHIRPS"){
-    listRaster_RF <-list.files(path=paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/", varName,"/chirps",sep=""), pattern=".nc$", full.names = TRUE)
+    listRaster_RF <-list.files(path=paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/", varName,"/chirps",sep=""), pattern=".nc$", full.names = TRUE)
   }else{
-    listRaster_RF <-list.files(path=paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/",varName,"/AgEra", sep=""), pattern=".nc$", full.names = TRUE)
+    listRaster_RF <-list.files(path=paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/",varName,"/AgEra", sep=""), pattern=".nc$", full.names = TRUE)
   }
   
   # Creation of the output dir
@@ -97,7 +97,7 @@ get_data_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, overwr
     ground <- countryCoord[, c("longitude", "latitude", "plantingDate", "harvestDate")]
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)
@@ -325,13 +325,13 @@ get_data_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, overwr
   x <- gsub("_", "-",rainfall_points$MetaDVar[6:nrow(rainfall_points)])
   y <- as.Date(x, format="%d-%m-%Y")
   
-  Date <- day(y)
-  Month <- month(y)
-  Year <- year(y)
+  Date <- format(y, "%d")
+  Month <- format(y, "%m")
+  Year <- format(y, "%Y")
   
-  Date <- ifelse(Date < 10, paste(0,Date,sep=""), as.character(Date))
-  Month <- ifelse(Month < 10, paste(0,Month,sep=""), as.character(Month))
-  
+  # Date <- ifelse(Date < 10, paste(0,Date,sep=""), as.character(Date))
+  # Month <- ifelse(Month < 10, paste(0,Month,sep=""), as.character(Month))
+  # 
   
   rainfall_points$Date <- c(rep(NA, 5), Date)
   rainfall_points$Month <- c(rep(NA, 5), Month)

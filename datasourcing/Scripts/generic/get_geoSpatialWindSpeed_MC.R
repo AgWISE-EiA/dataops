@@ -21,7 +21,7 @@ invisible(lapply(packages_required, library, character.only = TRUE))
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
 #' @param dataSource is one of c("chirts", "AgEra")
-#' @param overwrite default is FALSE 
+#' @param overwrite default is FALSE  
 #'
 #' @return raster files cropped from global data and the result will be written out in useCaseName/Crop/raw/soil/iSDA
 #'
@@ -31,13 +31,13 @@ crop_geoSpatial_WindSpeed <- function(country, useCaseName, Crop, dataSource, ov
   ## create a directory to store the cropped data: 
   if(dataSource == "chirts"){
     pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed/chirts", sep="")
-    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/chirts", pattern=".nc$")
-    listRaster_WS <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/chirts", listRaster_WS, sep="/"))
+    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/chirts", pattern=".nc$")
+    listRaster_WS <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/chirts", listRaster_WS, sep="/"))
     fileName <- "/chirts_geospatial_WindSpeed.tif"
   }else{
     pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed/AgEra", sep="")
-    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/AgEra", pattern=".nc$")
-    listRaster_WS <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/AgEra", listRaster_WS, sep="/"))
+    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/AgEra", pattern=".nc$")
+    listRaster_WS <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/AgEra", listRaster_WS, sep="/"))
     fileName <- "/AgEra_geospatial_WindSpeed.tif"
   }
   
@@ -71,7 +71,7 @@ crop_geoSpatial_WindSpeed <- function(country, useCaseName, Crop, dataSource, ov
 #' @param hv_j the harvest date as the date of the year
 #'
 #' @return  a data frame with total Wind Speed, number of rainy days and monthly Wind Speed
-#' @example summary_pointdata_WS(rastLayer1="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/AgEra/1992.nc",
+#' @example summary_pointdata_WS(rastLayer1="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/AgEra/1992.nc",
                    #' rastLayer2=NULL, gpsdata=data.frame(longitude = c(29.375, 30.125), latitude = c(-2.825, -2.425)),  pl_j=35, hv_j=128,
                    #' planting_harvest_sameYear = TRUE)
 summary_pointdata_WS <- function(rastLayer1= NULL, rastLayer2=NULL, gpsdata, pl_j, hv_j, planting_harvest_sameYear){
@@ -138,9 +138,9 @@ summary_pointdata_WS <- function(rastLayer1= NULL, rastLayer2=NULL, gpsdata, pl_
 
 #' @description this functions loops through all .nc files (~30 -40 years) for WindSpeed to provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'                            paste("~/agwise/AgWise_Data/data_sourcing/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
 #'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -165,14 +165,14 @@ get_WindSpeed_pointSummarydata <- function(country, useCaseName, Crop, AOI = FAL
   
   ## define the directories store the result and also read list of .nc files 
   if(dataSource == "chirts"){
-    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/chirts", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "AgEra"){
-    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   pathOut1 <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/result/WindSpeed", sep="")
-  pathOut2 <- paste("/home/jovyan/agwise/AgWise_Data/potential_yield/UseCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
-  pathOut3 <- paste("/home/jovyan/agwise/AgWise_Data/response_functions/UseCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
+  pathOut2 <- paste("/home/jovyan/agwise/AgWise_Data/potential_yield/useCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
+  pathOut3 <- paste("/home/jovyan/agwise/AgWise_Data/response_functions/useCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
   
   
   
@@ -214,7 +214,7 @@ get_WindSpeed_pointSummarydata <- function(country, useCaseName, Crop, AOI = FAL
     ground <- countryCoord[, c("longitude", "latitude", "plantingDate", "harvestDate")]
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)
@@ -245,7 +245,7 @@ get_WindSpeed_pointSummarydata <- function(country, useCaseName, Crop, AOI = FAL
       doParallel::registerDoParallel(cls)
       
       ### 3.1.2 Read for the corresponding year and date
-      WindSpeed_result <- foreach(i=1:length(listRaster_WS), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
+      WindSpeed_result <- foreach(i=1:(length(listRaster_WS)-1), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
         rast1 <- listRaster_WS[i]
         source("~/agwise-datasourcing/dataops/datasourcing/Scripts/generic/get_geoSpatialWindSpeed_MC.R", local = TRUE)
         summary_pointdata_WS(rastLayer1=rast1, rastLayer2=NULL, gpsdata = ground, pl_j=pl_j, hv_j=hv_j, planting_harvest_sameYear = TRUE)
@@ -381,9 +381,9 @@ get_WindSpeed_pointSummarydata <- function(country, useCaseName, Crop, AOI = FAL
 
 #' @description this functions loops through all .nc files (~30 - 40 years) for Wind Speed and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'                            paste("~/agwise/AgWise_Data/data_sourcing/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
 #'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -412,14 +412,14 @@ get_WindSpeed_pointData <- function(country, useCaseName, Crop, AOI = FALSE, ove
   
   
   if(dataSource == "chirts"){
-    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/chirts", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "AgEra"){
-    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/WindSpeed/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_WS <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/WindSpeed/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   pathOut1 <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/result/WindSpeed", sep="")
-  pathOut2 <- paste("/home/jovyan/agwise/AgWise_Data/potential_yield/UseCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
-  pathOut3 <- paste("/home/jovyan/agwise/AgWise_Data/response_functions/UseCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
+  pathOut2 <- paste("/home/jovyan/agwise/AgWise_Data/potential_yield/useCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
+  pathOut3 <- paste("/home/jovyan/agwise/AgWise_Data/response_functions/useCase_", country, "_",useCaseName, "/", Crop, "/raw/WindSpeed", sep="")
   
   
   if (!dir.exists(pathOut1)){
@@ -462,7 +462,7 @@ get_WindSpeed_pointData <- function(country, useCaseName, Crop, AOI = FALSE, ove
     
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)

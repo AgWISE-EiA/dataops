@@ -1,6 +1,6 @@
 
 
-getCoordinates <- function(country){
+getCoordinates <- function(country, useCaseName, Crop){
   
   ## get country abbreviation to used in gdam function
   countryCC <- countrycode(country, origin = 'country.name', destination = 'iso3c')
@@ -41,6 +41,8 @@ getCoordinates <- function(country){
   
   State_LGA <- unique(State_LGA[, c("country", "NAME_1", "NAME_2", "NAME_3", "longitude", "latitude")])
   State_LGA <- State_LGA[!is.na(State_LGA$NAME_1), ]
+    
+ saveRDS(State_LGA, paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/AOI_GPS.RDS", sep=""))
   
   return(State_LGA)
 }

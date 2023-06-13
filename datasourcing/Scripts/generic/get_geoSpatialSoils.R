@@ -36,7 +36,7 @@ invisible(lapply(packages_required, library, character.only = TRUE))
 crop_geoSpatial_soil <- function(country, useCaseName, Crop, dataSource, overwrite){
   
  
-  ## create a directory to store the cropped data: 
+  ## create a directory to store the cropped data:  Global_GeoData/Landing
 
   pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/Soil", sep="")
   if (!dir.exists(pathOut)){
@@ -45,12 +45,12 @@ crop_geoSpatial_soil <- function(country, useCaseName, Crop, dataSource, overwri
   
   ## read soil gloabl data
   if(dataSource == "iSDA"){
-    listRaster_soil <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/Soil/iSDA", pattern=".tif$")
-    readLayers_soil <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/Soil/iSDA", listRaster_soil, sep="/"))
+    listRaster_soil <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/Soil/iSDA", pattern=".tif$")
+    readLayers_soil <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/Soil/iSDA", listRaster_soil, sep="/"))
     
   }else{
-    listRaster_soil <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/Soil/soilGrids", pattern=".tif$")
-    readLayers_soil <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/Soil/soilGrids", listRaster_soil, sep="/"))
+    listRaster_soil <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/Soil/soilGrids", pattern=".tif$")
+    readLayers_soil <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/Soil/soilGrids", listRaster_soil, sep="/"))
   }
   
   ## read the relevant shape file from gdam to be used to crop the global data
@@ -209,7 +209,12 @@ transform_soils_data <- function(country, useCaseName, Crop, resFactor=1, overwr
 
 
 
-
+#' @description this functions loops through all .nc files (~30 - 40 years) for Solar Radiation and provide point based data.
+#' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
+#'                            paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") being saved in 
+#'                    paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#
 #' Title extracting the point soil data for GPS of trial location from the transformed soil data 
 #'
 #' @param country country name
@@ -228,7 +233,7 @@ extract_soil_pointdata <- function(country, useCaseName, Crop, AOI=FALSE, ID=NUL
     GPSdata <- unique(GPSdata[, c("longitude", "latitude")])
     GPSdata <- GPSdata[complete.cases(GPSdata), ]
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPSdata <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     GPSdata <- unique(GPSdata[, c("lon", "lat", ID)])
     GPSdata <- GPSdata[complete.cases(GPSdata), ]
     names(GPSdata) <- c("longitude", "latitude", "ID")

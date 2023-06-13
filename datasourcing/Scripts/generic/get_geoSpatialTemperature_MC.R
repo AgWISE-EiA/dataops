@@ -32,21 +32,21 @@ crop_geoSpatial_temp <- function(country, useCaseName, Crop, dataSource, overwri
   if(dataSource == "chirts"){
     pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/Temperature/chirts", sep="")
     ## read soil layers and crop
-    listRaster_tmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/chirts", pattern=".nc$")
-    readLayers_tmax <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/chirts", listRaster_tmax, sep="/"))
+    listRaster_tmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/chirts", pattern=".nc$")
+    readLayers_tmax <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/chirts", listRaster_tmax, sep="/"))
     fileName <- "/chirts_geospatial_TemperatureMax.tif"
     
-    listRaster_tmin <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/chirts", pattern=".nc$")
-    readLayers_tmin <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/chirts", listRaster_tmax, sep="/"))
+    listRaster_tmin <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/chirts", pattern=".nc$")
+    readLayers_tmin <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/chirts", listRaster_tmax, sep="/"))
     fileName_tmin <- "/chirts_geospatial_TemperatureMin.tif"
   }else{
     pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/Temperature/AgEra", sep="")
-    listRaster_tmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/AgEra", pattern=".nc$")
-    readLayers_tmax <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/AgEra", listRaster_tmax, sep="/"))
+    listRaster_tmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/AgEra", pattern=".nc$")
+    readLayers_tmax <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/AgEra", listRaster_tmax, sep="/"))
     fileName <- "/AgEra_geospatial_TemperatureMax.tif"
     
-    listRaster_tmin <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/AgEra", pattern=".nc$")
-    readLayers_tmin <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/AgEra", listRaster_tmax, sep="/"))
+    listRaster_tmin <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/AgEra", pattern=".nc$")
+    readLayers_tmin <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/AgEra", listRaster_tmax, sep="/"))
     fileName_tmin <- "/AgEra_geospatial_TemperatureMax.tif"
   }
   
@@ -82,7 +82,7 @@ crop_geoSpatial_temp <- function(country, useCaseName, Crop, dataSource, overwri
 #' @param varName is used to rename the column names it assumes one the following values c("Rain", "Tmax", "Tmin")
 #'
 #' @return  a data frame with total TemperatureMax, number of rainy days and monthly temperature
-#' @example sameYear_pointdata(rastLayer="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/chirts/1981.nc",
+#' @example sameYear_pointdata(rastLayer="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/chirts/1981.nc",
                    #' gpsdata=data.frame(longitude = c(29.375, 30.125), latitude = c(-2.825, -2.425)),  pl_j=35, hv_j=128)
 summary_pointdata_temp <- function(rastLayer1= NULL, rastLayer2=NULL, gpsdata, pl_j, hv_j, planting_harvest_sameYear, varName){
   if(planting_harvest_sameYear == TRUE){
@@ -170,9 +170,9 @@ summary_pointdata_temp <- function(rastLayer1= NULL, rastLayer2=NULL, gpsdata, p
 
 #' @description this functions loops through all .nc files (~30 -40 years) for TemperatureMax, and min and max temp to provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'                            paste("~/agwise/AgWise_Data/data_sourcing/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
 #'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -202,13 +202,13 @@ get_temp_pointSummarydata <- function(country, useCaseName, Crop, AOI = FALSE, o
   ## define the directories store the result and also read list of .nc files 
 
   if(dataSource == "chirts" & varName == "Tmax"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/chirts", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "AgEra" & varName == "Tmax"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/AgEra", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "chirts" & varName == "Tmin"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/chirts", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "AgEra" & varName == "Tmin"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   
@@ -254,7 +254,7 @@ get_temp_pointSummarydata <- function(country, useCaseName, Crop, AOI = FALSE, o
     countryCoord <- countryCoord[complete.cases(countryCoord),]
     ground <- countryCoord[, c("longitude", "latitude", "plantingDate", "harvestDate")]
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate",ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate",ID)
@@ -287,7 +287,7 @@ get_temp_pointSummarydata <- function(country, useCaseName, Crop, AOI = FALSE, o
       doParallel::registerDoParallel(cls)
       
       ### 3.1.2 Read for the corresponding year and date
-      t_result <- foreach(i=1:length(listRaster_temp), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
+      t_result <- foreach(i=1:(length(listRaster_temp)-1), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
         rast1 <- listRaster_temp[i]
         source("~/agwise-datasourcing/dataops/datasourcing/Scripts/generic/get_geoSpatialTemperature_MC.R", local = TRUE)
         summary_pointdata_temp(rastLayer1=rast1, rastLayer2=NULL, gpsdata = ground, pl_j=pl_j, hv_j=hv_j, 
@@ -433,11 +433,12 @@ get_temp_pointSummarydata <- function(country, useCaseName, Crop, AOI = FALSE, o
 #################################################################################################################
 
 
-#' @description this functions loops through all .nc files (~30 - 40 years) for TemperatureMax, and min and max temp to provide point based data.
+#' @description this functions loops through all .nc files (~30 - 40 years) for Solar Radiation and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
-#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                            paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") being saved in 
+#'                    paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -463,16 +464,15 @@ get_temp_pointSummarydata <- function(country, useCaseName, Crop, AOI = FALSE, o
 get_temp_pointData <- function(country, useCaseName, Crop, AOI = FALSE, overwrite = FALSE, 
                                Planting_month_date = "02-01", Harvest_month_date = "05-30", 
                                jobs = 10, dataSource, varName = NULL, ID = NULL){
-  
  
   if(dataSource == "chirts" & varName == "Tmax"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/chirts", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "AgEra" & varName == "Tmax"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/AgEra", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "chirts" & varName == "Tmin"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/chirts", pattern=".nc$", full.names = TRUE)
   }else if(dataSource == "AgEra" & varName == "Tmin"){
-    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_temp <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   pathOut1 <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/result/Temperature", sep="")
@@ -520,7 +520,7 @@ get_temp_pointData <- function(country, useCaseName, Crop, AOI = FALSE, overwrit
     ground <- countryCoord
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)
@@ -699,10 +699,12 @@ get_temp_pointData <- function(country, useCaseName, Crop, AOI = FALSE, overwrit
 #################################################################################################################
 #################################################################################################################
 # 6. Extract the seasonal temperature on raster data -------------------------------------------
-#' @description this functions loops through all .nc files (~30 -40 years) for temperature to provide raster based seasonal temperature.
+#' @description this functions loops through all .nc files (~30 - 40 years) for Solar Radiation and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
-#'          
+#'                            paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") being saved in 
+#'                    paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#         
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -727,12 +729,12 @@ get_tp_rasterSummarydata <- function(country, useCaseName, Crop, AOI = FALSE, ov
   
   # Input Temperature
   if(dataSource == "AgEra"){
-    listRaster_AgERAmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/AgEra", pattern=".nc$", full.names = TRUE)
-    listRaster_AgERAmin <- list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_AgERAmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_AgERAmin <- list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/AgEra", pattern=".nc$", full.names = TRUE)
     listYear_AgERA <- seq(1979, (1979+length(listRaster_AgERAmax))-1)
   }else{
-    listRaster_AgERAmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMax/chirts", pattern=".nc$", full.names = TRUE)
-    listRaster_AgERAmin <- list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/TemperatureMin/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_AgERAmax <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMax/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_AgERAmin <- list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/TemperatureMin/chirts", pattern=".nc$", full.names = TRUE)
     listYear_AgERA <- seq(1983, (1983+length(listRaster_AgERAmax))-1)
   }
   

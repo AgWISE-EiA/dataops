@@ -31,14 +31,14 @@ crop_geoSpatial_SolarRadiation <- function(country, useCaseName, Crop, dataSourc
   ## create a directory to store the cropped data: 
   if(dataSource == "chirts"){
     pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/SolarRadiation/chirts", sep="")
-    listRaster_rf <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/chirps", pattern=".nc$")
-    readLayers_rf <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/chirps", listRaster_rf, sep="/"))
+    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/chirps", pattern=".nc$")
+    readLayers_SR <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/chirps", listRaster_SR, sep="/"))
     fileName <- "/CHIRPS_geospatial_SolarRadiation.tif"
     
   }else{
     pathOut <- paste("//home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/SolarRadiation/AgEra", sep="")
-    listRaster_rf <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/AgEra", pattern=".nc$")
-    readLayers_rf <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/AgEra", listRaster_rf, sep="/"))
+    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/AgEra", pattern=".nc$")
+    readLayers_SR <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/AgEra", listRaster_SR, sep="/"))
     fileName <- "/AgEra_geospatial_SolarRadiation.tif"
   }
   
@@ -140,9 +140,9 @@ summary_pointdata_SR <- function(rastLayer1= NULL, rastLayer2=NULL, gpsdata, pl_
 
 #' @description this functions loops through all .nc files (~30 -40 years) for SolarRadiation to provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'                            paste("~/agwise/AgWise_Data/data_sourcing/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
 #'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -165,9 +165,9 @@ get_SolarRadiation_pointSummarydata <- function(country, useCaseName, Crop, AOI 
   
   ## define the directories store the result and also read list of .nc files 
   if(dataSource == "chirts"){
-    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/chirts", pattern=".nc$", full.names = TRUE)
   }else{
-    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   pathOut1 <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/result/SolarRadiation", sep="")
@@ -213,7 +213,7 @@ get_SolarRadiation_pointSummarydata <- function(country, useCaseName, Crop, AOI 
     ground <- countryCoord
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)
@@ -380,9 +380,9 @@ get_SolarRadiation_pointSummarydata <- function(country, useCaseName, Crop, AOI 
 
 #' @description this functions loops through all .nc files (~30 - 40 years) for Solar Radiation and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
-#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                            paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") being saved in 
+#'                    paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -402,16 +402,16 @@ get_SolarRadiation_pointSummarydata <- function(country, useCaseName, Crop, AOI 
 #' plantingYear, harvestYear, longitude, latitude   
 #' 
 #' @examples: get_SolarRadiation_pointData(country = "Rwanda",  useCaseName = "RAB", Crop = "Potato", AOI = FALSE, overwrite = TRUE,
-#'             Planting_month_date = "07-01",  Harvest_month_date = "11-30", 
+#'             Planting_month_date = "07-01",  Harvest_month_date = "11-30",  
 #'             jobs=10,  dataSource = "AgEra")
 get_SolarRadiation_pointData <- function(country, useCaseName, Crop, AOI = FALSE, overwrite = FALSE, 
                                Planting_month_date = "02-01", Harvest_month_date = "05-30", 
                                jobs = 10, dataSource, ID){
 
   if(dataSource == "chirts"){
-    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/chirts", pattern=".nc$", full.names = TRUE)
   }else{
-    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/SolarRadiation/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_SR <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/SolarRadiation/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   pathOut1 <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/result/SolarRadiation", sep="")
@@ -457,7 +457,7 @@ get_SolarRadiation_pointData <- function(country, useCaseName, Crop, AOI = FALSE
     countryCoord <- countryCoord[complete.cases(countryCoord),]
     ground <- countryCoord[, c("longitude", "latitude", "plantingDate", "harvestDate")]
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)

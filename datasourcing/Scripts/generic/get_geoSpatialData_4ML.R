@@ -36,12 +36,14 @@ suppressWarnings(suppressPackageStartupMessages(invisible(lapply(packages_requir
 #' @examples join_geospatial_4ML(country = "Rwanda", useCaseName = "RAB", Crop = "Potato", AOI = TRUE , 
 #' dataSource = "CHIRPS", Planting_month_date = "02_05", ID = "TLID")
 
-join_geospatial_4ML <- function(country, useCaseName, Crop, AOI, Planting_month_date, dataSource,  ID){
+join_geospatial_4ML <- function(country, useCaseName, Crop, AOI, Planting_month_date, dataSource=NULL, ID, overwrite = TRUE){
+  
+ 
   
   
   ## create directories to save output 
   pathOut1 <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/result/data_4ML", sep="")
-  pathOut2 <- paste("/home/jovyan/agwise-potentialyield/dataops/potentialyield/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/data_4ML", sep="")
+  # pathOut2 <- paste("/home/jovyan/agwise-potentialyield/dataops/potentialyield/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/data_4ML", sep="")
   pathOut3 <- paste("/home/jovyan/agwise-responsefunctions/dataops/responsefunctions/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/data_4ML", sep="")
   
   
@@ -49,9 +51,9 @@ join_geospatial_4ML <- function(country, useCaseName, Crop, AOI, Planting_month_
     dir.create(file.path(pathOut1), recursive = TRUE)
   }
   
-  if (!dir.exists(pathOut2)){
-    dir.create(file.path(pathOut2), recursive = TRUE)
-  }
+  # if (!dir.exists(pathOut2)){
+  #   dir.create(file.path(pathOut2), recursive = TRUE)
+  # }
   
   if (!dir.exists(pathOut3)){
     dir.create(file.path(pathOut3), recursive = TRUE)
@@ -61,8 +63,8 @@ join_geospatial_4ML <- function(country, useCaseName, Crop, AOI, Planting_month_
   
   if (AOI == FALSE){
     ## trial sites info
-    GPS_Data <- readRDS(paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/AOI_GPS.RDS", sep=""))
-    GPS_Data$Yield <- GPS_Data$TY
+    GPS_Data <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_Data$Yield <- round(GPS_Data$TY,3)
     GPS_Data <- subset(GPS_Data, select=-c(TY))
     ## geo spatial point data with no time dimension
     Topography_PointData <- readRDS(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/Topography/Topography_PointData_trial.RDS", sep=""))
@@ -120,6 +122,7 @@ join_geospatial_4ML <- function(country, useCaseName, Crop, AOI, Planting_month_
  
    
   }else{
+    Planting_month_date <- gsub("-", "_", Planting_month_date)
     
     ## geo-spatial point data with no time dimension
     Topography_PointData <- readRDS(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/Topography/Topography_PointData_AOI.RDS", sep=""))
@@ -153,18 +156,19 @@ join_geospatial_4ML <- function(country, useCaseName, Crop, AOI, Planting_month_
     merged_df2 <- Reduce(function(x, y) merge(x, y, by = c("longitude", "latitude", "NAME_1", "NAME_2"), all = TRUE), df_list2)
    
     
-    merged_df2 <- merged_df2[!merged_df2$plantingYear %in% c(1979, 1980, 2023), ]
+    merged_df2 <- merged_df2[!merged_df2$plantingYear %in% c(1979, 1980, 2023), ] ## not all layers have data for 1979 and 1980 and 2023 is incomplete
     merged_df2 <- merged_df2[order(merged_df2$plantingYear), ]
    
   }
   
   merged_df2 <- merged_df2[complete.cases(merged_df2), ]
+  Planting_month_date <- gsub("-", "_", Planting_month_date)
   
-  fname <- ifelse(AOI == TRUE, "linked_geoSpatial_AOI.RDS", "linked_geoSpatial_trial.RDS")
+  fname <- ifelse(AOI == TRUE, paste("geoSpatial_4ML_AOI_", Planting_month_date, ".RDS", sep=""), "geoSpatial_4ML_trial.RDS")
   
-  saveRDS(object = merged_df2, file=paste(pathOut1, fname , sep=""))
-  saveRDS(object = merged_df2, file=paste(pathOut2, fname, sep=""))
-  saveRDS(object = merged_df2, file=paste(pathOut3, fname, sep=""))
+  saveRDS(merged_df2, paste(pathOut1, fname , sep="/"))
+  # saveRDS(object = merged_df2, file=paste(pathOut2, fname, sep=""))
+  saveRDS(merged_df2, paste(pathOut3, fname, sep="/"))
   
   return(merged_df2)
   

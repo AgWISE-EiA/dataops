@@ -33,8 +33,8 @@ head(AOI_point_SR_AgEra5)
 #################################################################################################################
 #TODO 
 AOI_SR_summary_p1 <- get_SolarRadiation_pointSummarydata(country = "Rwanda",  useCaseName = "RAB", Crop = "Potato", 
-                                                 AOI = TRUE, overwrite = TRUE, Planting_month_date = "02-05", 
-                                                 Harvest_month_date = "06-05", jobs=10, dataSource = "AgEra", ID = NULL)
+                                                 AOI = TRUE, overwrite = TRUE, Planting_month_date = "08-08", 
+                                                 Harvest_month_date = "12-08", jobs=10, dataSource = "AgEra", ID = NULL)
 
 
 #################################################################################################################

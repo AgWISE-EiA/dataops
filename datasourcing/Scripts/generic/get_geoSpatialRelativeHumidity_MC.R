@@ -30,19 +30,19 @@ crop_geoSpatial_RelativeHumidity <- function(country, useCaseName, Crop, dataSou
   
   #TODO create a look up table to check use case - country names
   ## get country abbreviation to used in gdam function
-  # countryCC <- countrycode(country, origin = 'country.name', destination = 'iso3c')
+  # countryCC <- countrycode(country, origin = 'country.name', destination = 'iso3c')  
   
    ## create a directory to store the cropped data: 
   if(dataSource == "chirts"){
     pathOut <- paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/RelativeHumidity/chirts", sep="")
-    listRaster_rf <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/chirps", pattern=".nc$")
-    readLayers_rf <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/chirps", listRaster_rf, sep="/"))
+    listRaster_rf <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/chirps", pattern=".nc$")
+    readLayers_rf <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/chirps", listRaster_rf, sep="/"))
     fileName <- "/CHIRPS_geospatial_RelativeHumidity.tif"
     
   }else{
     pathOut <- paste("//home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw/RelativeHumidity/AgEra", sep="")
-    listRaster_rf <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/AgEra", pattern=".nc$")
-    readLayers_rf <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/AgEra", listRaster_rf, sep="/"))
+    listRaster_rf <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/AgEra", pattern=".nc$")
+    readLayers_rf <- terra::rast(paste("/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/AgEra", listRaster_rf, sep="/"))
     fileName <- "/AgEra_geospatial_RelativeHumidity.tif"
   }
   
@@ -148,9 +148,9 @@ summary_pointdata_RH <- function(rastLayer1= NULL, rastLayer2=NULL, gpsdata, pl_
 
 #' @description this functions loops through all .nc files (~30 - 40 years) for Wind Speed and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'                            paste("~/agwise/AgWise_Data/data_sourcing/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
 #'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -178,9 +178,9 @@ get_RelativeHumidity_pointData <- function(country, useCaseName, Crop, AOI = FAL
                                jobs = 10, dataSource, ID = NULL){
   
   if(dataSource == "chirts"){
-    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/chirts", pattern=".nc$", full.names = TRUE)
   }else{
-    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   
@@ -229,7 +229,7 @@ get_RelativeHumidity_pointData <- function(country, useCaseName, Crop, AOI = FAL
     
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)
@@ -402,11 +402,11 @@ get_RelativeHumidity_pointData <- function(country, useCaseName, Crop, AOI = FAL
 #################################################################################################################
 
 
-#' @description this functions loops through all .nc files (~30 -40 years) for RelativeHumidity to provide point based data.
+#' @description this functions loops through all .nc files (~30 - 40 years) for Solar Radiation and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
-#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#'                            paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") being saved in 
+#'                    paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -431,9 +431,9 @@ get_RelativeHumidity_pointSummarydata <- function(country, useCaseName, Crop, AO
   ## define the directories store the result and also read list of .nc files 
 
   if(dataSource == "chirts"){
-    listRaster_RF <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/chirps", pattern=".nc$", full.names = TRUE)
+    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/chirps", pattern=".nc$", full.names = TRUE)
   }else{
-    listRaster_RF <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/RelativeHumidity/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/RelativeHumidity/AgEra", pattern=".nc$", full.names = TRUE)
   }
   
   
@@ -481,7 +481,7 @@ get_RelativeHumidity_pointSummarydata <- function(country, useCaseName, Crop, AO
     ground <- countryCoord[, c("longitude", "latitude", "plantingDate", "harvestDate")]
     
   }else{
-    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/UseCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
+    GPS_fieldData <- readRDS(paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result/compiled_fieldData.RDS", sep=""))  
     countryCoord <- unique(GPS_fieldData[, c("lon", "lat", "plantingDate", "harvestDate", ID)])
     countryCoord <- countryCoord[complete.cases(countryCoord), ]
     names(countryCoord) <- c("longitude", "latitude", "plantingDate", "harvestDate", ID)
@@ -640,12 +640,12 @@ get_RelativeHumidity_pointSummarydata <- function(country, useCaseName, Crop, AO
 
 
 # Extract RelativeHumidity data time series for point based data prepared for Crop Models
-#' @description this functions loops through all .nc files (~30 - 40 years) for RelativeHumidity to provide point based data.
+#' @description this functions loops through all .nc files (~30 - 40 years) for Solar Radiation and provide point based data.
 #' @details for AOI it requires a "AOI_GPS.RDS" data frame with c("longitude","latitude") columns being saved in 
-#'                            paste("~/agwise/AgWise_Data/data_sourcing/UseCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
-#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") beinf saved in 
-#'                    paste("~/agwise/AgWise_Data/fieldData_analytics/UseCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
-#'  
+#'                            paste("~/agwise-datasourcing/dataops/datasourcing/Data/useCase_", country, "_",useCaseName, "/", Crop, "/raw", sep="") 
+#'          for trial sites it requires a "compiled_fieldData.RDS" data frame with c("lon", "lat", "plantingDate", "harvestDate") being saved in 
+#'                    paste("~/agwise-datacuration/dataops/datacuration/Data/useCase_",country, "_",useCaseName, "/", Crop, "/result", sep="")
+#  
 #' @param country country name
 #' @param useCaseName use case name  name
 #' @param Crop the name of the crop to be used in creating file name to write out the result.
@@ -674,9 +674,9 @@ get_geoSpatial_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, 
   
   # Input RelativeHumidity
   if(dataSource == "chirts"){
-    listRaster_RF <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/", varName,"/chirts", pattern=".nc$", full.names = TRUE)
+    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/", varName,"/chirts", pattern=".nc$", full.names = TRUE)
   }else{
-    listRaster_RF <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Landing/Global_GeoData/", varName,"/AgEra", pattern=".nc$", full.names = TRUE)
+    listRaster_RH <-list.files(path="/home/jovyan/agwise-datasourcing/dataops/datasourcing/Data/Global_GeoData/Landing/", varName,"/AgEra", pattern=".nc$", full.names = TRUE)
     
   }
   
@@ -748,8 +748,8 @@ get_geoSpatial_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, 
       doParallel::registerDoParallel(cls)
       
       # Loop on all the year 
-      rf_4CP <- foreach(i=1:length(listRaster_RF), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
-        rasti <- listRaster_RF[i]
+      rf_4CP <- foreach(i=1:length(listRaster_RH), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
+        rasti <- listRaster_RH[i]
         PlHvD <- terra::rast(rasti, lyrs=c(pl_j:hv_j))
         xy <- ground[, c("longitude", "latitude")]
         raini <- terra::extract(PlHvD, xy, method='simple', cells=FALSE)
@@ -792,10 +792,10 @@ get_geoSpatial_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, 
       cls <- makeCluster(jobs)
       doParallel::registerDoParallel(cls)
       ## RelativeHumidity
-      rf_4CP <- foreach(i = 1:(length(listRaster_RF)-1), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
-        listRaster_RF <- listRaster_RF[order(listRaster_RF)]
-        rast1 <- listRaster_RF[i]
-        rast2 <- listRaster_RF[i+1]
+      rf_4CP <- foreach(i = 1:(length(listRaster_RH)-1), .packages = c('terra', 'plyr', 'stringr','tidyr')) %dopar% {
+        listRaster_RH <- listRaster_RH[order(listRaster_RH)]
+        rast1 <- listRaster_RH[i]
+        rast2 <- listRaster_RH[i+1]
         rasti1 <- terra::rast(rast1, lyrs=c(pl_j:terra::nlyr(terra::rast(rast1))))
         rasti2 <- terra::rast(rast2, lyrs=c(1:hv_j))
         PlHvD <- c(rasti1, rasti2)
@@ -869,15 +869,15 @@ get_geoSpatial_4CropModels <- function(country, useCaseName, Crop, AOI = FALSE, 
       # Case planting and harvesting dates span the same year
       
       if (yearPi == yearHi) {
-        rasti<-listRaster_RF[which(grepl(yearPi, listRaster_RF, fixed=TRUE) == T)]
+        rasti<-listRaster_RH[which(grepl(yearPi, listRaster_RH, fixed=TRUE) == T)]
         rasti <- terra::rast(rasti, lyrs=c(pl_j:hv_j))
       }
       
       # Case planting and harvesting dates span two different years
       if (yearPi < yearHi) {
-        rasti1<-listRaster_RF[which(grepl(yearPi, listRaster_RF, fixed=TRUE) == T)]
+        rasti1<-listRaster_RH[which(grepl(yearPi, listRaster_RH, fixed=TRUE) == T)]
         rasti1 <- terra::rast(rasti1, lyrs=c(pl_j:terra::nlyr(terra::rast(rasti1))))
-        rasti2 <-listRaster_RF[which(grepl(yearHi, listRaster_RF, fixed=TRUE) == T)]
+        rasti2 <-listRaster_RH[which(grepl(yearHi, listRaster_RH, fixed=TRUE) == T)]
         rasti2 <- terra::rast(rasti2, lyrs=c(1:hv_j))
         rasti <- c(rasti1, rasti2)
         
